@@ -1,0 +1,402 @@
+/* ---------- Variables ---------- */
+:root {
+    --gris-fond: #fffffe;
+    --gris-clair: #e1e1e1;
+    --gris-bandeau: #4C5454;
+    --gris-texte: #454545;
+    --ombre-claire: rgba(255, 255, 255, 0.9);
+    --ombre-sombre: rgba(0, 0, 0, 0.25);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+    font-family: "Montserrat", sans-serif;
+    background: var(--gris-clair);
+    color: var(--gris-texte);
+}
+
+/* ---------- 1. Hero ---------- */
+.hero {
+    display: grid;
+    grid-template-columns: 38% 62%;
+    min-height: 460px;
+    background: var(--gris-fond);
+}
+
+.hero__left {
+    position: relative;
+    padding: 1.5rem;
+    background: linear-gradient(135deg, #e6e6e6, #cfcfcf);
+    /* bord droit incliné */
+    clip-path: polygon(0 0, 100% 0, 92% 100%, 0 100%);
+    z-index: 1;
+}
+
+.hero__nom { font-size: 0.8rem; letter-spacing: 0.05em; }
+
+.hero__titre {
+    font-family: "Roboto", sans-serif;
+    font-weight: 900;
+    font-size: clamp(3rem, 7vw, 5.5rem);
+    line-height: 0.95;
+    margin: 1rem 0 2rem;
+}
+
+/* Sphère : dégradé radial + ombre = effet de volume */
+.hero__sphere,
+.contact__sphere {
+    aspect-ratio: 1;
+    border-radius: 50%;
+    background: radial-gradient(circle at 35% 30%, #fff, #e0e0e0 70%);
+    box-shadow: 8px 12px 20px var(--ombre-sombre);
+}
+.hero__sphere {
+    position: absolute;
+    top: 1rem;
+    left: 40%;
+    width: clamp(100px, 30vw, 200px);
+}
+
+.hero__boutons { display: flex; flex-wrap: wrap; gap: 3rem; }
+
+.bouton {
+    padding: 0.5rem 0.9rem;
+    font-size: 1.5rem;
+    text-transform: uppercase;
+    text-decoration: none;
+    color: var(--gris-texte);
+    background: var(--gris-fond);
+    border-radius: 4px;
+    box-shadow: 3px 3px 6px var(--ombre-sombre), -3px -3px 6px var(--ombre-claire);
+    transition: transform 0.2s;
+}
+.bouton:hover { transform: translateY(-2px); }
+
+.hero__right { overflow: hidden; margin-left: -8%; }
+.hero__image { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+/* ---------- 2. Bandeau ---------- */
+.bandeau {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.6rem 1.5rem;
+    background: var(--gris-bandeau);
+    color: #fff;
+}
+.bandeau h2 { font-weight: 500; font-size: 1.1rem; }
+.bandeau__voir-tout {
+    padding: 0.2rem 1rem;
+    border-radius: 999px;
+    background: #fff;
+    color: var(--gris-texte);
+    text-decoration: none;
+}
+
+/* ---------- 3. Cartes (effet enfoncé) ---------- */
+.cartes {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1em;
+    padding: 5em;
+}
+
+.carte {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    min-height: 300px;
+    padding: 1rem;
+    border-radius: 28px;
+    background: var(--gris-clair);
+    color: #414141;
+    text-decoration: none;
+    box-shadow:
+        inset 4px 4px 8px var(--ombre-sombre),
+        inset -4px -4px 8px var(--ombre-claire),
+        6px 8px 14px var(--ombre-sombre);
+    transition: transform 0.2s;
+}
+.carte:hover { transform: translateY(-4px); }
+
+.carte__titre strong {
+    font-family: "Roboto", sans-serif;
+    font-size: 2.6rem;
+    font-weight: 900;
+}
+.carte__titre em {
+    font-family: "Roboto", sans-serif;
+    font-style: normal;
+    font-weight: 700;
+    font-size: 1.6rem;
+    margin-left: 0.3rem;
+}
+.carte__sous-titre { font-weight: 700; }
+
+/* ---------- 4. Œuvres (aperçu sur l'accueil) ---------- */
+.oeuvres { padding: 1.5rem; }
+.oeuvres h2 { font-weight: 500; margin-bottom: 1rem; }
+.oeuvres__grille {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 1.5rem;
+}
+.oeuvre { color: var(--gris-texte); text-decoration: none; }
+.oeuvre img { width: 100%; height: auto; border-radius: 12px; display: block; }
+
+/* =========================================================
+   PAGES INTERNES
+   ========================================================= */
+
+/* ---------- Barre du haut (Contact, Parcours, Œuvres) ---------- */
+.topbar {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.4rem 1rem;
+    font-size: 0.65rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    background: var(--gris-clair);
+    border-bottom: 1px solid #c4c4c4;
+}
+.topbar a { color: var(--gris-texte); text-decoration: none; }
+.topbar a:hover { text-decoration: underline; }
+
+/* Titre de page centré (MON PARCOURS, MES OEUVRES…) */
+.titre-page {
+    font-family: "Roboto", sans-serif;
+    font-weight: 700;
+    font-size: clamp(1.8rem, 4vw, 2.6rem);
+    text-transform: uppercase;
+    text-align: center;
+    padding: 0.6rem 1rem;
+}
+/* Double filet au-dessus et en dessous */
+.titre-page--lignes {
+    margin: 1rem auto 1.5rem;
+    max-width: 640px;
+    border-top: 4px double var(--gris-texte);
+    border-bottom: 4px double var(--gris-texte);
+}
+
+/* ---------- Contact ---------- */
+.contact { background: var(--gris-clair); }
+
+.contact__haut {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+    padding: 3rem 2rem 2rem;
+    background: #d3d3d3;
+}
+.contact__titre {
+    font-family: "Roboto", sans-serif;
+    font-weight: 700;
+    font-size: clamp(2rem, 5vw, 3rem);
+    text-transform: uppercase;
+    color: #6b6b6b;
+    margin-bottom: 0.6rem;
+}
+.contact__mail,
+.contact__tel {
+    display: block;
+    color: var(--gris-texte);
+    line-height: 1.6;
+}
+.contact__mail { text-decoration: underline; }
+.contact__tel { text-decoration: none; }
+
+.bouton--cv { font-size: 0.8rem; background: #bcbcbc; }
+
+.contact__bas {
+    position: relative;
+    min-height: 14rem;
+    padding: 1.5rem 2rem 6rem;
+}
+.reseaux { list-style: none; display: grid; gap: 0.5rem; }
+.reseaux a,
+.reseaux li > span {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.85rem;
+    color: var(--gris-texte);
+    text-decoration: none;
+}
+.reseaux a:hover { text-decoration: underline; }
+.reseaux__icone {
+    display: inline-block;
+    width: 1.4rem;
+    height: 1.4rem;
+    border-radius: 3px;
+    background: #7d7d7d;
+    object-fit: cover;
+}
+.contact__sphere {
+    position: absolute;
+    right: 2rem;
+    bottom: 1.5rem;
+    width: clamp(90px, 18vw, 150px);
+}
+
+/* ---------- Mon parcours (frise) ---------- */
+.parcours { background: var(--gris-clair); }
+.frise { list-style: none; }
+
+.etape {
+    display: grid;
+    grid-template-columns: 5rem 1.8rem 1fr;
+    min-height: 7.5rem;
+    /* --pct : 0 (clair) -> 100 (sombre), fourni par le gabarit */
+    background: color-mix(in srgb, #2b2b2b calc(var(--pct) * 1%), #8f8f8f);
+}
+/* Année de début en haut de la ligne ; année de fin en bas (dernière étape) */
+.etape__annee {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 0.4rem 0.5rem;
+    font-weight: 700;
+    font-size: 0.85rem;
+    color: #7a7a7a;
+    background: var(--gris-clair);
+}
+.etape__barre {
+    display: flex;
+    padding: 0.4rem 0.3rem;
+    background: var(--gris-clair);
+    border-right: 3px solid #bdbdbd;
+}
+.etape__barre::after {
+    content: "";
+    flex: 1;
+    border-radius: 999px;
+    background: color-mix(in srgb, #111 calc(var(--pct) * 1%), #777);
+    box-shadow: 2px 2px 4px var(--ombre-sombre);
+}
+.etape__zone {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding: 1rem 1.2rem;
+}
+.etape__carte {
+    width: min(100%, 70%);
+    padding: 1rem 1.2rem;
+    border-radius: 12px;
+    background: #e9e9e9;
+    color: var(--gris-texte);
+    box-shadow: 4px 4px 8px var(--ombre-sombre), -2px -2px 6px var(--ombre-claire);
+}
+.etape__carte h2 { font-size: 1rem; font-weight: 700; margin-bottom: 0.3rem; }
+.etape__carte p { font-size: 0.85rem; line-height: 1.4; }
+
+/* ---------- Mes œuvres (mosaïques) ---------- */
+.oeuvres-page { background: #ececec; padding-bottom: 2rem; }
+.oeuvres-page__filtre { text-align: center; font-size: 0.85rem; margin-bottom: 1rem; }
+.oeuvres-page__filtre a { color: var(--gris-texte); }
+
+.mosaique {
+    position: relative;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-auto-rows: clamp(70px, 12vw, 110px);
+    grid-auto-flow: dense;
+    gap: 1rem;
+    max-width: 640px;
+    margin: 0 auto;
+    padding: 0 1rem;
+}
+
+.tuile {
+    position: relative;
+    overflow: hidden;
+    border-radius: 12px;
+    background: #7a7a7a;
+    box-shadow: 4px 4px 8px var(--ombre-sombre), -3px -3px 6px var(--ombre-claire);
+    transition: transform 0.2s;
+}
+.tuile:hover { transform: translateY(-3px); }
+.tuile img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+/* Tailles choisies dans l'admin Wagtail */
+.tuile--grande     { grid-column: span 2; grid-row: span 2; }
+.tuile--haute      { grid-row: span 2; }
+.tuile--tres-haute { grid-row: span 3; }
+.tuile--large      { grid-column: span 3; }
+
+/* Gros mot décoratif (3D / 2D / son) posé sur la mosaïque */
+.mosaique__label {
+    position: absolute;
+    z-index: 2;
+    font-family: "Roboto", sans-serif;
+    font-weight: 900;
+    font-size: clamp(2rem, 6vw, 3.2rem);
+    line-height: 1;
+    color: rgba(60, 60, 60, 0.55);
+    pointer-events: none;
+}
+.mosaique--3d  .mosaique__label { top: 0.4rem;    left: 1.6rem; }
+.mosaique--2d  .mosaique__label { top: 0.4rem;    right: 1.6rem; }
+.mosaique--son .mosaique__label { bottom: 0.4rem; right: 1.6rem; }
+
+/* Séparateur ★★ ———— ★★ */
+.separateur {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    max-width: 640px;
+    margin: 0 auto;
+    padding: 1.2rem 1rem;
+    font-size: 1.2rem;
+}
+.separateur hr {
+    flex: 1;
+    border: 0;
+    border-top: 3px solid var(--gris-texte);
+}
+.vide { text-align: center; padding: 2rem; }
+
+/* ---------- Détail d'une œuvre ---------- */
+.oeuvre-detail { max-width: 900px; margin: 0 auto; padding: 1rem 1.5rem 3rem; }
+.oeuvre-detail__retour { font-size: 0.85rem; margin-bottom: 0.5rem; }
+.oeuvre-detail__retour a { color: var(--gris-texte); }
+.oeuvre-detail__categorie {
+    text-align: center;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-size: 0.75rem;
+    margin-bottom: 1rem;
+}
+.oeuvre-detail__image {
+    width: 100%;
+    height: auto;
+    display: block;
+    border-radius: 12px;
+    box-shadow: 6px 8px 14px var(--ombre-sombre);
+}
+.oeuvre-detail__audio { width: 100%; margin-top: 1rem; }
+.oeuvre-detail__texte { margin-top: 1.5rem; line-height: 1.6; }
+
+/* ---------- Mobile ---------- */
+@media (max-width: 768px) {
+    .hero { grid-template-columns: 1fr; }
+    .hero__left { clip-path: none; }
+    .hero__right { margin-left: 0; min-height: 200px; }
+    .hero__boutons { gap: 1rem; }
+    .cartes { grid-template-columns: 1fr; padding: 1.5rem; }
+
+    .contact__haut { padding: 2rem 1rem 1.5rem; }
+    .contact__bas { padding: 1.5rem 1rem 6rem; }
+
+    .etape { grid-template-columns: 3.8rem 1.4rem 1fr; }
+    .etape__carte { width: 100%; }
+
+    .mosaique { grid-template-columns: repeat(2, 1fr); }
+    .tuile--grande,
+    .tuile--large { grid-column: span 2; }
+    .tuile--tres-haute { grid-row: span 2; }
+}

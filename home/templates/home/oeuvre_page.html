@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% load wagtailcore_tags wagtailimages_tags %}
+
+{% block body_class %}template-oeuvre{% endblock %}
+
+{% block content %}
+<header class="topbar">
+    <a href="/" aria-label="Leo Quenoy, retour à l'accueil">Leo Quenoy</a>
+    <a href="/" aria-label="Studio Ocktan, retour à l'accueil">Studio Ocktan</a>
+</header>
+
+<main id="contenu" class="oeuvre-detail">
+    <nav class="oeuvre-detail__retour" aria-label="Retour">
+        <a href="{% pageurl page.get_parent %}">← Mes œuvres</a>
+    </nav>
+
+    <h1 class="titre-page">{{ page.title }}</h1>
+    <p class="oeuvre-detail__categorie">{{ page.get_categorie_display }}</p>
+
+    {% if page.image %}
+        {% image page.image width-1200 class="oeuvre-detail__image" alt=page.title %}
+    {% endif %}
+
+    {% if page.fichier_audio %}
+        <audio class="oeuvre-detail__audio" controls src="{{ page.fichier_audio.url }}" aria-label="Écouter : {{ page.title }}"></audio>
+    {% endif %}
+
+    {% if page.description %}
+        <div class="oeuvre-detail__texte">{{ page.description|richtext }}</div>
+    {% endif %}
+</main>
+{% endblock %}

@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% load wagtailcore_tags %}
+
+{% block body_class %}template-parcours{% endblock %}
+
+{% block content %}
+<header class="topbar">
+    <a href="/" aria-label="Leo Quenoy, retour à l'accueil">Leo Quenoy</a>
+    <a href="/" aria-label="Studio Ocktan, retour à l'accueil">Studio Ocktan</a>
+</header>
+
+<main id="contenu" class="parcours">
+    <h1 class="titre-page">{{ page.title }}</h1>
+
+    <ol class="frise" aria-label="Parcours, du plus ancien au plus récent">
+        {% for e in etapes %}
+            <li class="etape" style="--pct: {{ e.pct }}">
+                <span class="etape__annee">
+                    <span>{{ e.annee }}</span>
+                    {% if e.fin %}<span><span class="sr-only">jusqu'en </span>{{ e.fin }}</span>{% endif %}
+                </span>
+                <span class="etape__barre" aria-hidden="true"></span>
+                <div class="etape__zone">
+                    <article class="etape__carte">
+                        <h2>{{ e.titre }}</h2>
+                        {% if e.description %}<p>{{ e.description|linebreaksbr }}</p>{% endif %}
+                    </article>
+                </div>
+            </li>
+        {% endfor %}
+    </ol>
+</main>
+{% endblock %}

@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% load wagtailcore_tags wagtailimages_tags %}
+
+{% block body_class %}template-oeuvres{% endblock %}
+
+{% block content %}
+<header class="topbar">
+    <a href="/" aria-label="Leo Quenoy, retour à l'accueil">Leo Quenoy</a>
+    <a href="/" aria-label="Studio Ocktan, retour à l'accueil">Studio Ocktan</a>
+</header>
+
+<main id="contenu" class="oeuvres-page">
+    <h1 class="titre-page titre-page--lignes">{{ page.title }}</h1>
+
+    {% if categorie_active %}
+        <p class="oeuvres-page__filtre"><a href="{% pageurl page %}">← Toutes les œuvres</a></p>
+    {% endif %}
+
+    {% for section in sections %}
+        <section class="mosaique mosaique--{{ section.code }}" aria-label="Œuvres {{ section.label }}">
+            <span class="mosaique__label" aria-hidden="true">{{ section.label }}</span>
+
+            {% for o in section.oeuvres %}
+                <a class="tuile {{ o.classe_taille }}" href="{% pageurl o %}">
+                    {% if o.image %}
+                        {% image o.image fill-600x600 alt=o.title %}
+                    {% else %}
+                        <span class="sr-only">{{ o.title }}</span>
+                    {% endif %}
+                </a>
+            {% endfor %}
+        </section>
+
+        {% if not forloop.last %}
+            <div class="separateur" aria-hidden="true">
+                <span>★★</span><hr><span>★★</span>
+            </div>
+        {% endif %}
+    {% empty %}
+        <p class="vide">Aucune œuvre publiée pour le moment.</p>
+    {% endfor %}
+</main>
+{% endblock %}

@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+{% load wagtailcore_tags wagtailimages_tags %}
+
+{% block body_class %}template-contact{% endblock %}
+
+{% block content %}
+<header class="topbar">
+    <a href="/" aria-label="Leo Quenoy, retour à l'accueil">Leo Quenoy</a>
+    <a href="/" aria-label="Studio Ocktan, retour à l'accueil">Studio Ocktan</a>
+</header>
+
+<main id="contenu" class="contact">
+
+    {# ---------- Bandeau d'accroche ---------- #}
+    <section class="contact__haut">
+        <div class="contact__intro">
+            <h1 class="contact__titre">{{ page.title }}</h1>
+            <p class="contact__accroche">Un projet, une idée, une collaboration&nbsp;? Écris-moi, je te réponds avec plaisir.</p>
+        </div>
+
+        <svg class="contact__etoile" viewBox="0 0 100 100" aria-hidden="true" focusable="false">
+            <polygon points="50,2 61,22 82,12 79,35 98,40 85,58 98,76 76,78 74,98 55,88 40,99 33,79 12,86 18,64 2,50 20,40 14,20 36,25"/>
+        </svg>
+    </section>
+
+    {# ---------- Trois façons de me joindre ---------- #}
+    <section class="contact__cartes" aria-label="Me joindre">
+        {% if page.email %}
+            <a class="ccarte ccarte--mail" href="mailto:{{ page.email }}">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+                    <rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/>
+                </svg>
+                <span class="ccarte__etiquette">M'écrire</span>
+                <span class="ccarte__valeur">{{ page.email }}</span>
+            </a>
+        {% endif %}
+
+        {% if page.telephone %}
+            <a class="ccarte ccarte--tel" href="tel:{{ page.telephone|cut:' ' }}">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+                    <path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2z"/>
+                </svg>
+                <span class="ccarte__etiquette">M'appeler</span>
+                <span class="ccarte__valeur">{{ page.telephone }}</span>
+            </a>
+        {% endif %}
+
+        {% if page.cv %}
+            <a class="ccarte ccarte--cv" href="{{ page.cv.url }}" download>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+                    <path d="M12 3v12m0 0-4-4m4 4 4-4"/><path d="M4 20h16"/>
+                </svg>
+                <span class="ccarte__etiquette">Mon parcours en détail</span>
+                <span class="ccarte__valeur">Télécharger mon CV</span>
+            </a>
+        {% endif %}
+    </section>
+
+    {# ---------- Réseaux : des autocollants ---------- #}
+    {% if page.reseaux %}
+        <section class="contact__reseaux" aria-labelledby="titre-reseaux">
+            <h2 id="titre-reseaux" class="contact__sous-titre">Me retrouver en ligne</h2>
+
+            <ul class="reseaux">
+                {% for bloc in page.reseaux %}
+                    <li>
+                        {% if bloc.value.url %}
+                            <a href="{{ bloc.value.url }}" target="_blank" rel="noopener noreferrer">
+                                {% if bloc.value.icone %}
+                                    {% image bloc.value.icone fill-48x48 class="reseaux__icone" alt="" %}
+                                {% else %}
+                                    <span class="reseaux__icone" aria-hidden="true"></span>
+                                {% endif %}
+                                {{ bloc.value.nom }}
+                                <span class="sr-only">(s'ouvre dans un nouvel onglet)</span>
+                            </a>
+                        {% else %}
+                            <span>
+                                {% if bloc.value.icone %}
+                                    {% image bloc.value.icone fill-48x48 class="reseaux__icone" alt="" %}
+                                {% else %}
+                                    <span class="reseaux__icone" aria-hidden="true"></span>
+                                {% endif %}
+                                {{ bloc.value.nom }}
+                            </span>
+                        {% endif %}
+                    </li>
+                {% endfor %}
+            </ul>
+        </section>
+    {% endif %}
+</main>
+{% endblock %}
