@@ -71,7 +71,7 @@ class HomePage(Page):
     subpage_types = [
         "home.OeuvresIndexPage",
         "home.ParcoursPage",
-        "home.ContactPage",
+        "home.ContactPage", "home.MentionsLegalesPage",
     ]
 
     # --- Hero ---
@@ -275,4 +275,56 @@ class ContactPage(Page):
         FieldPanel("telephone"),
         FieldPanel("cv"),
         FieldPanel("reseaux"),
+    ]
+
+
+# ---------------------------------------------------------------------------
+# Mentions légales
+# ---------------------------------------------------------------------------
+MENTIONS_PAR_DEFAUT = """
+<h2>Éditeur du site</h2>
+<p>Ce site est édité par Leo Quenoy, illustrateur 2D/3D et UI/UX, sous le nom Studio Ocktan.</p>
+<p>Statut : [À COMPLÉTER : particulier, auto-entrepreneur, société…]</p>
+<p>Adresse : [À COMPLÉTER]</p>
+<p>E-mail : [À COMPLÉTER]</p>
+<p>Téléphone : [À COMPLÉTER]</p>
+<p>N° SIRET (si vous en avez un) : [À COMPLÉTER]</p>
+<p>Directeur de la publication : Leo Quenoy.</p>
+
+<h2>Hébergement</h2>
+<p>Le site est hébergé par : [À COMPLÉTER : nom de l'hébergeur, adresse, site web et téléphone].</p>
+
+<h2>Propriété intellectuelle</h2>
+<p>Les illustrations, modèles 3D, créations sonores, textes et mises en page présents sur ce site sont des œuvres de Leo Quenoy, sauf mention contraire. Toute reproduction, représentation ou réutilisation, même partielle, est interdite sans autorisation écrite préalable.</p>
+
+<h2>Données personnelles</h2>
+<p>Ce site ne comporte pas de formulaire et ne dépose pas de cookies publicitaires ni de suivi. Si vous m'écrivez par e-mail, vos données (adresse e-mail, contenu du message) ne servent qu'à vous répondre et ne sont pas transmises à des tiers.</p>
+<p>Les polices de caractères du site sont chargées depuis le service Google Fonts : votre adresse IP est alors transmise à Google. [À ADAPTER : supprimez cette phrase si vous hébergez les polices vous-même.]</p>
+<p>Conformément au règlement général sur la protection des données (RGPD) et à la loi Informatique et Libertés, vous disposez d'un droit d'accès, de rectification et d'effacement de vos données. Pour l'exercer, écrivez à l'adresse e-mail indiquée plus haut. Vous pouvez aussi adresser une réclamation à la CNIL (www.cnil.fr).</p>
+
+<h2>Liens externes</h2>
+<p>Ce site contient des liens vers d'autres sites (réseaux sociaux, portfolios). Leo Quenoy n'est pas responsable de leur contenu.</p>
+
+<h2>Crédits</h2>
+<p>Conception, illustrations et développement : Leo Quenoy. Site réalisé avec Wagtail (Django).</p>
+"""
+
+
+class MentionsLegalesPage(Page):
+    """Page « Mentions légales » : texte modifiable dans l'admin."""
+
+    max_count = 1
+    parent_page_types = ["home.HomePage"]
+    subpage_types = []
+
+    contenu = RichTextField(
+        "Texte",
+        default=MENTIONS_PAR_DEFAUT,
+        features=["h2", "h3", "bold", "italic", "link", "ol", "ul"],
+    )
+    mise_a_jour = models.DateField("Dernière mise à jour", null=True, blank=True)
+
+    content_panels = Page.content_panels + [
+        FieldPanel("contenu"),
+        FieldPanel("mise_a_jour"),
     ]

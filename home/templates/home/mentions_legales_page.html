@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% load wagtailcore_tags %}
+
+{% block body_class %}template-mentions{% endblock %}
+
+{% block content %}
+<header class="topbar">
+    <a href="/" aria-label="Leo Quenoy, retour à l'accueil">Leo Quenoy</a>
+    <a href="/" aria-label="Studio Ocktan, retour à l'accueil">Studio Ocktan</a>
+</header>
+
+<main id="contenu" class="mentions">
+    <h1 class="titre-page">{{ page.title }}</h1>
+
+    <article class="mentions__texte">
+        {{ page.contenu|richtext }}
+
+        {% if page.mise_a_jour %}
+            <p class="mentions__date">Dernière mise à jour : {{ page.mise_a_jour|date:"d/m/Y" }}</p>
+        {% endif %}
+    </article>
+</main>
+{% endblock %}

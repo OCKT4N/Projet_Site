@@ -20,14 +20,146 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500&family=Roboto:wght@700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{% static 'css/portfolio.css' %}">
     {% block extra_css %}{% endblock %}
+    <script>
+        /* Applique tout de suite les réglages d'accessibilité mémorisés */
+        (function () {
+            try {
+                var r = JSON.parse(localStorage.getItem("a11y") || "{}");
+                var h = document.documentElement;
+                if (r.taille) h.style.fontSize = r.taille + "%";
+                if (r.dalto) h.classList.add("a11y-dalto-" + r.dalto);
+                ["contraste", "lisible", "liens", "calme"].forEach(function (k) {
+                    if (r[k]) h.classList.add("a11y-" + k);
+                });
+            } catch (e) {}
+        })();
+    </script>
 </head>
 <body class="{% block body_class %}{% endblock %}">
     {# Lien d'évitement : premier élément atteint au clavier #}
     <a class="skip-link" href="#contenu">Aller au contenu principal</a>
+    <a class="skip-link skip-link--menu" href="/">Retour au menu (accueil)</a>
 
     {% wagtailuserbar %}
 
     {% block content %}{% endblock %}
+
+    {# Pied de page : le lien n'apparaît que si la page « mentions-legales » existe #}
+    {% slugurl "mentions-legales" as url_mentions %}
+    <footer class="pied">
+        <p>© {% now "Y" %} Leo Quenoy – Studio Ocktan</p>
+        {% if url_mentions %}
+            <a href="{{ url_mentions }}">Mentions légales</a>
+        {% endif %}
+    </footer>
+
+    {# Bouton clavier : retour au menu / accueil, atteignable avec Tab #}
+    <a class="retour-menu" href="/"><span aria-hidden="true">⌂</span> Menu</a>
+
+    {# Options d'accessibilité #}
+    <div class="a11y" id="a11y">
+        <button type="button" class="a11y__bouton" id="a11y-ouvrir" aria-expanded="false" aria-controls="a11y-panneau">
+            <span aria-hidden="true">♿</span> Accessibilité
+        </button>
+        <div class="a11y__panneau" id="a11y-panneau" role="group" aria-label="Options d'accessibilité" hidden>
+            <p class="a11y__titre">Options d'accessibilité</p>
+            <p class="a11y__aide">Astuce clavier : la touche Retour arrière ramène au menu.</p>
+            <div class="a11y__ligne">
+                <span id="a11y-lib-taille">Taille du texte</span>
+                <span class="a11y__groupe">
+                    <button type="button" data-taille="-" aria-label="Réduire la taille du texte">A−</button>
+                    <button type="button" data-taille="+" aria-label="Agrandir la taille du texte">A+</button>
+                </span>
+            </div>
+            <div class="a11y__dalto" role="group" aria-label="Couleurs pour le daltonisme">
+                <span class="a11y__sous-titre">Couleurs (daltonisme)</span>
+                <button type="button" data-dalto="" aria-pressed="true">Couleurs d'origine</button>
+                <button type="button" data-dalto="deuteranopie" aria-pressed="false">Deutéranopie (vert)</button>
+                <button type="button" data-dalto="protanopie" aria-pressed="false">Protanopie (rouge)</button>
+                <button type="button" data-dalto="tritanopie" aria-pressed="false">Tritanopie (bleu)</button>
+            </div>
+            <button type="button" class="a11y__option" data-option="contraste" aria-pressed="false">Contraste élevé</button>
+            <button type="button" class="a11y__option" data-option="lisible" aria-pressed="false">Police et espacement lisibles</button>
+            <button type="button" class="a11y__option" data-option="liens" aria-pressed="false">Souligner les liens</button>
+            <button type="button" class="a11y__option" data-option="calme" aria-pressed="false">Arrêter les animations</button>
+            <button type="button" class="a11y__reset" id="a11y-reset">Réinitialiser</button>
+        </div>
+    </div>
+
+    <script>
+    (function () {
+        var h = document.documentElement;
+        var KEY = "a11y";
+        var etat = {};
+        try { etat = JSON.parse(localStorage.getItem(KEY) || "{}"); } catch (e) {}
+        function sauver() { try { localStorage.setItem(KEY, JSON.stringify(etat)); } catch (e) {} }
+
+        var ouvrir = document.getElementById("a11y-ouvrir");
+        var panneau = document.getElementById("a11y-panneau");
+        var boutons = document.querySelectorAll("[data-option]");
+
+        var daltoBtns = document.querySelectorAll("[data-dalto]");
+        var MODES = ["deuteranopie", "protanopie", "tritanopie"];
+        function maj() {
+            h.style.fontSize = etat.taille ? etat.taille + "%" : "";
+            MODES.forEach(function (m) { h.classList.toggle("a11y-dalto-" + m, etat.dalto === m); });
+            daltoBtns.forEach(function (b) {
+                b.setAttribute("aria-pressed", (b.getAttribute("data-dalto") || "") === (etat.dalto || "") ? "true" : "false");
+            });
+            boutons.forEach(function (b) {
+                var k = b.getAttribute("data-option");
+                h.classList.toggle("a11y-" + k, !!etat[k]);
+                b.setAttribute("aria-pressed", etat[k] ? "true" : "false");
+            });
+        }
+        function fermer() {
+            panneau.hidden = true;
+            ouvrir.setAttribute("aria-expanded", "false");
+        }
+
+        ouvrir.addEventListener("click", function () {
+            var ferme = panneau.hidden;
+            panneau.hidden = !ferme;
+            ouvrir.setAttribute("aria-expanded", ferme ? "true" : "false");
+        });
+        document.addEventListener("keydown", function (e) {
+            if (e.key === "Escape" && !panneau.hidden) { fermer(); ouvrir.focus(); return; }
+            /* Retour arrière = retour au menu (accueil), sauf pendant une saisie de texte */
+            if (e.key === "Backspace" && !e.ctrlKey && !e.altKey && !e.metaKey && !e.shiftKey) {
+                var t = e.target, tag = t && t.tagName ? t.tagName.toLowerCase() : "";
+                if (tag === "input" || tag === "textarea" || tag === "select" || (t && t.isContentEditable)) return;
+                if (window.location.pathname !== "/") { e.preventDefault(); window.location.href = "/"; }
+            }
+        });
+        boutons.forEach(function (b) {
+            b.addEventListener("click", function () {
+                var k = b.getAttribute("data-option");
+                etat[k] = !etat[k];
+                sauver(); maj();
+            });
+        });
+        daltoBtns.forEach(function (b) {
+            b.addEventListener("click", function () {
+                var m = b.getAttribute("data-dalto");
+                if (m) etat.dalto = m; else delete etat.dalto;
+                sauver(); maj();
+            });
+        });
+        document.querySelectorAll("[data-taille]").forEach(function (b) {
+            b.addEventListener("click", function () {
+                var t = etat.taille || 100;
+                t += b.getAttribute("data-taille") === "+" ? 15 : -15;
+                etat.taille = Math.max(85, Math.min(160, t));
+                if (etat.taille === 100) delete etat.taille;
+                sauver(); maj();
+            });
+        });
+        document.getElementById("a11y-reset").addEventListener("click", function () {
+            etat = {}; sauver(); maj();
+        });
+        maj();
+    })();
+    </script>
 
     {% block extra_js %}{% endblock %}
 </body>

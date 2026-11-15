@@ -1,0 +1,25 @@
+# Environnement virtuel Python
+env/
+venv/
+.venv/
+
+# Fichiers temporaires Python
+__pycache__/
+*.pyc
+
+# Base de données locale (contient ton compte admin et tes contenus)
+db.sqlite3
+
+# Fichiers envoyés via l'admin (images, sons) : à garder hors de GitHub
+media/
+
+# Réglages privés et éditeurs
+.env
+*.log
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Anciennes sauvegardes
+*.old.css
